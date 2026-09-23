@@ -1,0 +1,8 @@
+[
+  {"ref": "1", "claim": "argparse is the stdlib default recommended module for basic CLIs", "class": "landscape", "pub_date": "2026-09"},
+  {"ref": "2", "claim": "argparse action='version' prints to stdout and exits 0", "class": "version", "pub_date": "2026-09"},
+  {"ref": "3", "claim": "CLI syntax errors exit 2 per Unix convention; argparse follows", "class": "patterns", "pub_date": "2026-09"},
+  {"ref": "4", "claim": "Testable-CLI norm: main(argv=None) + capsys + pytest.raises(SystemExit)", "class": "patterns", "pub_date": "2026-09"},
+  {"ref": "5", "claim": "tool.uv package=false means no installed metadata; --version must use static string", "class": "version", "pub_date": "2026-09"},
+  {"ref": "6", "claim": "ruff defaults: line-length 88, indent-width 4", "class": "version", "pub_date": "2026-09"}
+]

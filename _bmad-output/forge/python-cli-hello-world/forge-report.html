@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Forge Report — python cli hello world</title>
+<style>
+  :root { --ink:#1a1a2e; --paper:#f7f5f0; --seal:#1e6f3e; --line:#d8d4c8; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:Georgia,'Times New Roman',serif; background:var(--paper); color:var(--ink); line-height:1.6; }
+  main { max-width:760px; margin:0 auto; padding:3rem 1.5rem 5rem; }
+  header { text-align:center; margin-bottom:2.5rem; }
+  h1 { font-size:2rem; margin:.5rem 0 0; }
+  .sub { color:#6b675c; font-style:italic; }
+  .seal-wrap { display:inline-block; padding:1.2rem 2rem; border:4px double var(--seal); border-radius:50%; margin-bottom:1.2rem; }
+  .seal { color:var(--seal); font-size:1.4rem; letter-spacing:.15em; text-transform:uppercase; font-weight:bold; }
+  h2 { font-size:1.25rem; margin-top:2.2rem; border-bottom:2px solid var(--line); padding-bottom:.3rem; }
+  ul { padding-left:1.3rem; }
+  li { margin:.35rem 0; }
+  .lock { border-left:4px solid var(--seal); background:#eef4ee; padding:.6rem 1rem; margin:.6rem 0; border-radius:0 .4rem .4rem 0; }
+  .reject { border-left:4px solid #a33; background:#f6ecec; padding:.6rem 1rem; margin:.6rem 0; border-radius:0 .4rem .4rem 0; }
+  .weak { border-left:4px solid #b8860b; background:#f7f2e2; padding:.6rem 1rem; margin:.6rem 0; border-radius:0 .4rem .4rem 0; }
+  .credits { font-size:.9rem; color:#6b675c; margin-top:2.5rem; border-top:1px solid var(--line); padding-top:1rem; }
+  svg.seal-svg { display:block; margin:0 auto 1rem; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <svg class="seal-svg" width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="60" cy="60" r="54" fill="#eef4ee" stroke="#1e6f3e" stroke-width="4"/>
+      <circle cx="60" cy="60" r="46" fill="none" stroke="#1e6f3e" stroke-width="1.5" stroke-dasharray="3 3"/>
+      <path d="M60 24 L64 40 L80 36 L72 49 L86 58 L70 62 L74 78 L60 70 L46 78 L50 62 L34 58 L48 49 L40 36 L56 40 Z" fill="#1e6f3e"/>
+      <text x="60" y="102" text-anchor="middle" font-family="Georgia,serif" font-size="8" letter-spacing="2" fill="#1e6f3e">HARDENED</text>
+    </svg>
+    <h1>Forge Report — python cli hello world</h1>
+    <p class="sub">Pressure-tested and hardened · 2026-09-22</p>
+  </header>
+
+  <h2>Outcome</h2>
+  <p>The idea survived full adversarial scrutiny. It is now a locked, build-ready spec: a minimal, zero-dependency Python CLI printing <code>Hello, {name}!</code> with <code>--name</code> defaulting to <code>World</code>, a <code>--version</code> flag, and a testable pure-function structure.</p>
+
+  <h2>Locked decisions</h2>
+  <div class="lock">Entry point: <code>uv run python main.py</code></div>
+  <div class="lock">CLI: stdlib <code>argparse</code>, <code>--name</code> (single, default <code>World</code>), <code>--version</code></div>
+  <div class="lock">Structure: pure <code>hello(name) -&gt; str</code> + <code>main(argv|None) -&gt; int</code></div>
+  <div class="lock">Empty/whitespace <code>--name</code> falls back to <code>World</code></div>
+  <div class="lock">Exit 0 on success, 2 on bad args; no color, no network, no file writes, ASCII-safe output</div>
+  <div class="lock">Tests: bare run, custom <code>--name</code>, <code>--version</code></div>
+
+  <h2>Rejected</h2>
+  <div class="reject"><code>sys.argv</code>-only main — less teachable, no free <code>--help</code>/<code>--version</code></div>
+  <div class="reject">Positional name argument — breaks the bare-run canonical output contract</div>
+  <div class="reject">Deferred: <code>--repeat</code>, <code>--caps</code>, <code>--lang</code>, env-var greeting, color/rich output, PyPI packaging</div>
+
+  <h2>Weak points that survived</h2>
+  <div class="weak">Single-value <code>--name</code> (last-one-wins) — multiple greetings unsupported this iteration</div>
+  <div class="weak">Version-string source of truth not pinned for the flat, non-packaged project — decide at build</div>
+
+  <h2>Personas that pressure-tested this idea</h2>
+  <p class="credits">
+    🎯 <strong>Yui</strong> — Craftsman (argparse vs. sys.argv, flag vs. positional)<br>
+    🚢 <strong>Dana</strong> — Pragmatist (scope: is --version / tests worth it)<br>
+    🌶️ <strong>Boundary</strong> — Edge-Case Hunter (empty name, unicode, repeated flags, exit codes)<br>
+    🔒 <strong>Vex</strong> — Security Engineer (no injection, no files, no network, zero dependencies)<br>
+    💻 <strong>Amelia</strong> — Senior Engineer (test-first structure, pure function, subprocess-free tests)<br>
+    🃏 <strong>Wildcard</strong> — Option Generator (alternative statements: positional, env GREETING)<br>
+    📏 <strong>Level</strong> — Claim Checker (evidence for zero deps: pyproject has none)<br>
+    🛑 <strong>Killjoy</strong> — Loop Stopper (cut the room off: what's actually in vs. deferred)
+  </p>
+</main>
+</body>
+</html>
