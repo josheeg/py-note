@@ -11,7 +11,7 @@
 # ─────────────────────────────────────────────────────────────────
 
 [core]
-project_name = "py"
+project_name = "bmad-ai-project-context-vu-venv-todo-no-sub"
 document_output_language = "English"
 output_folder = "{project-root}/_bmad-output"
 
