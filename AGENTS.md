@@ -1,75 +1,33 @@
-# AGENTS.md - Development Guidelines for AI Agents
+<!-- bmad:context -->
+<!-- Verified 2026-09-24 against local filesystem; no Git SHA available because this directory is not a Git repository. Managed by bmad-project-context; edits inside this block are replaced on refresh. Keep anything you want preserved outside the markers. -->
 
-Last Updated: 2026-09-22
+## py
 
-## Project Overview
+BMAD/OpenCode tooling workspace for the `py` installation, not an application source tree. It contains generated BMAD v6.12.0 configuration and skill sources; planning and implementation artifacts belong under `_bmad-output/`, and project knowledge is configured for `docs/` (currently absent).
 
-This is a note-driven Python CLI project. The workflow is:
+## Policy
 
-1. `note.txt` holds the current project idea (its contents change over time).
-2. The BMad method pipeline (`@bmad-*` skills) processes the idea in `note.txt`
-   into planning documents (PRD, UX, spec, architecture, epics, sprint).
-3. `main.py` is the actual CLI program that gets built and evolved from those plans.
+- Treat `_bmad/config.toml`, `_bmad/config.user.toml`, `_bmad/core/config.yaml`, and `_bmad/bmm/config.yaml` as installer-managed; do not hand-edit them. Put durable team overrides in `_bmad/custom/` and personal overrides in `_bmad/custom/*.user.toml`.
+- Treat `_bmad/render/` as generated output and `.opencode/commands/` plus `.agents/skills/` as installed tooling; use BMAD override files for durable behavior changes.
+- Do not commit `.opencode/node_modules/`, `.opencode/package.json`, or `.opencode/package-lock.json`; `.opencode/.gitignore` lists them.
 
-## Build & Test Commands
+## Where things are
 
-```bash
-# Create/refresh the virtual environment
-uv sync
+- Central BMAD config and resolver helpers: `_bmad/config.toml`, `_bmad/config.user.toml`, `_bmad/scripts/`.
+- Installed skills and OpenCode wrappers: `.agents/skills/`, `.opencode/commands/`.
+- Durable customizations: `_bmad/custom/`; generated render snapshots: `_bmad/render/`; planning and implementation artifacts: `_bmad-output/`.
 
-# Run the CLI
-uv run python main.py
+## Running and verifying
 
-# Run with arguments
-uv run python main.py --name "Ada"
+- Run installed Python helpers through `uv run`; resolver and render scripts require Python >=3.11, while `_bmad/scripts/memlog.py` declares >=3.8.
+- Resolve central config with `uv run _bmad/scripts/resolve_config.py --project-root .`; resolve a skill customization with `uv run _bmad/scripts/resolve_customization.py --skill <skill-dir> --project-root . --key workflow`.
+- Render an installed skill with `uv run _bmad/scripts/render_skill.py --project-root . --skill <skill-dir>`; output belongs under `_bmad/render/`.
+- No application build, test, or lint command is defined here; do not invent one. This directory is not a Git repository, so do not rely on `git diff`, `git log`, or commit provenance.
 
-# Run tests
-uv run pytest
+## Conventions that differ from defaults
 
-# Lint
-uv run ruff check .
+- Central config merges `_bmad/config.toml`, `_bmad/config.user.toml`, `_bmad/custom/config.toml`, then `_bmad/custom/config.user.toml`; skill customization merges its installed `customize.toml`, team override, then user override.
+- Write memlog state only through `_bmad/scripts/memlog.py`; `.memlog.md` is append-only and has no hand-edit/delete workflow.
+- Use English for agent communication and generated documents, as configured in `_bmad/config.user.toml`.
 
-# Format
-uv run ruff format .
-
-# Regenerate the project scaffold from scratch
-uv run python scaffold.py
-```
-
-## Code Style Guidelines
-
-- **Type Hints**: Always use type hints for function signatures and variables
-- **Naming**:
-  - `snake_case` for functions, variables, and modules
-  - `PascalCase` for classes
-  - `CONSTANTS` for module-level constants
-- **Imports**: Group by standard library / third-party / local
-- **Formatting**: Follow ruff defaults (line length 88, indent 4 spaces)
-- **Error Handling**: Never use bare `except:` - catch specific exceptions
-- **No Type Suppression**: Never use `as any`, `@ts-ignore`, or similar
-
-## Project Structure
-
-```
-game-note-py/
-├── main.py          # The CLI program
-├── scaffold.py      # Script that regenerates the project scaffold files
-├── note.txt         # The current project idea (drives the BMad pipeline)
-├── pyproject.toml   # uv project config
-├── AGENTS.md        # Agent guidelines (this file)
-├── README.md
-└── .venv/           # Virtual environment (for AI agents and tooling)
-```
-
-## Working with the Note-Driven Workflow
-
-- When the user changes `note.txt`, re-run the BMad pipeline to refresh the plans.
-- Keep planning documents in sync with the current `note.txt` contents.
-- `main.py` should always reflect the latest agreed-upon plan for the CLI.
-
-## Error Handling
-
-1. **Specific Exceptions**: Catch specific exceptions, never bare `except:`
-2. **Log Errors**: Use proper logging, not print statements (except in the CLI entry point)
-3. **Graceful Degradation**: Handle errors without crashing
-4. **User Feedback**: Show meaningful error messages to users
+<!-- /bmad:context -->
